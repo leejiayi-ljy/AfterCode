@@ -40,7 +40,7 @@ export default async function handler(req, res) {
   ].join('\n\n')
 
   try {
-    const message = await client.messages.parse({
+    const message = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
