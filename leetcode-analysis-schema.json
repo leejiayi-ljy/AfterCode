@@ -1,0 +1,132 @@
+{
+  "type": "object",
+  "description": "Analysis of a single LeetCode solution. Fields are ordered so the model reasons before it concludes.",
+  "properties": {
+    "solution_summary": {
+      "type": "string",
+      "description": "1-2 sentences describing what approach this code actually takes, read from the code itself (not assumed from the problem). Establishes shared understanding before any judgment."
+    },
+    "input_caveats": {
+      "type": ["string", "null"],
+      "description": "If the problem statement is missing, ambiguous, or does not match the submitted code, state the mismatch here and analyze cautiously. Null if the input is clear and consistent."
+    },
+    "correctness": {
+      "type": "object",
+      "properties": {
+        "reasoning": {
+          "type": "string",
+          "description": "Why the code is or is not correct, grounded in its actual logic. Reason here before committing to an assessment."
+        },
+        "assessment": {
+          "type": "string",
+          "enum": ["correct", "likely_correct", "has_issues", "incorrect", "cannot_determine"]
+        },
+        "edge_cases": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Specific edge cases this code handles or fails: empty input, single element, duplicates, negatives, overflow, and problem-specific boundaries."
+        }
+      },
+      "required": ["reasoning", "assessment", "edge_cases"],
+      "additionalProperties": false
+    },
+    "complexity": {
+      "type": "object",
+      "properties": {
+        "reasoning": {
+          "type": "string",
+          "description": "Derive complexity from the actual loops, recursion, and data structures in THIS code. Identify what drives the bound BEFORE stating it. Note any hidden costs."
+        },
+        "time": { "type": "string", "description": "Big-O time, e.g. O(n log n)." },
+        "space": { "type": "string", "description": "Big-O space; note whether output is included." }
+      },
+      "required": ["reasoning", "time", "space"],
+      "additionalProperties": false
+    },
+    "code_review": {
+      "type": "object",
+      "properties": {
+        "strengths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Specific things done well in this code, not generic praise."
+        },
+        "improvements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "issue": { "type": "string", "description": "The specific problem, ideally pointing at a line, name, or construct." },
+              "suggestion": { "type": "string", "description": "The concrete fix." }
+            },
+            "required": ["issue", "suggestion"],
+            "additionalProperties": false
+          },
+          "description": "Concrete, specific to this code: style, redundancy, naming, robustness. No generic advice."
+        }
+      },
+      "required": ["strengths", "improvements"],
+      "additionalProperties": false
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "approach": { "type": "string", "description": "Name and how it works, in 1-2 sentences." },
+          "reasoning": { "type": "string", "description": "Why this complexity, derived before the bound is stated." },
+          "complexity": { "type": "string", "description": "Time and space, e.g. 'O(n) time, O(1) space'." },
+          "tradeoff": { "type": "string", "description": "When you would pick this over the submitted approach, and what it costs." }
+        },
+        "required": ["approach", "reasoning", "complexity", "tradeoff"],
+        "additionalProperties": false
+      },
+      "minItems": 2,
+      "description": "At least two genuinely different approaches, not minor variations of the submitted one."
+    },
+    "pattern": {
+      "type": "object",
+      "properties": {
+        "explanation": {
+          "type": "string",
+          "description": "Why this problem belongs to the category, grounded in its structure. Explain before naming."
+        },
+        "category": {
+          "type": "string",
+          "description": "The underlying pattern, e.g. 'sliding window', 'monotonic stack', 'two pointers'."
+        },
+        "similar_problems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "problem_type": { "type": "string", "description": "The kind of problem and what makes it similar — always provided." },
+              "named_example": { "type": ["string", "null"], "description": "A specific problem name ONLY if confident it exists and matches; otherwise null." }
+            },
+            "required": ["problem_type", "named_example"],
+            "additionalProperties": false
+          },
+          "minItems": 3,
+          "description": "At least three. Describe the type; name a specific problem only when confident."
+        }
+      },
+      "required": ["explanation", "category", "similar_problems"],
+      "additionalProperties": false
+    },
+    "interviewer_followup": {
+      "type": "string",
+      "description": "One sharp follow-up an interviewer would ask after this solution — one that probes a weakness or pushes toward optimization."
+    }
+  },
+  "required": [
+    "solution_summary",
+    "input_caveats",
+    "correctness",
+    "complexity",
+    "code_review",
+    "alternatives",
+    "pattern",
+    "interviewer_followup"
+  ],
+  "additionalProperties": false
+}
