@@ -1,6 +1,6 @@
 {
   "buildCommand": "vite build",
-  "devCommand": "vite --port 3000",
+  "devCommand": "vite --port $PORT",
   "outputDirectory": "dist",
   "framework": "vite"
 }

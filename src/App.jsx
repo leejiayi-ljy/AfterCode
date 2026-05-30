@@ -16,24 +16,32 @@ function SecretGate({ onUnlock }) {
       style={{ height: '100%', background: 'var(--bg)' }}
       className='flex flex-col items-center justify-center gap-10'
     >
-      <div className='flex flex-col items-center gap-2'>
-        <div className='mono' style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
-          <span style={{ color: 'var(--amber)' }}>lc</span>
-          <span style={{ color: 'var(--text-muted)' }}>/</span>
-          <span style={{ color: 'var(--text)' }}>companion</span>
+      <div className='flex flex-col items-center gap-3'>
+        <div className='brand'>
+          <span className='brand-after'>after</span>
+          <span className='brand-code'>Code</span>
         </div>
-        <span className='label' style={{ letterSpacing: '0.18em' }}>
-          private
+        <span className='label' style={{ letterSpacing: '0.2em', opacity: 0.6 }}>
+          private access
         </span>
       </div>
 
-      <div className='flex flex-col gap-2.5' style={{ width: '260px' }}>
+      <div
+        className='flex flex-col gap-2.5'
+        style={{
+          width: '260px',
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: '8px',
+          padding: '16px',
+        }}
+      >
         <input
           type='password'
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && value && onUnlock(value)}
-          placeholder='secret'
+          placeholder='enter secret'
           autoFocus
           className='field mono'
           style={{ letterSpacing: '0.05em' }}
@@ -118,14 +126,17 @@ export default function App() {
         style={{
           borderBottom: '1px solid var(--border)',
           padding: '0 18px',
-          height: '40px',
+          height: '42px',
           gap: '12px',
+          background: 'rgba(31, 35, 53, 0.6)',
+          backdropFilter: 'blur(8px)',
+          position: 'relative',
+          zIndex: 10,
         }}
       >
-        <span className='mono' style={{ fontSize: '13px', letterSpacing: '-0.01em' }}>
-          <span style={{ color: 'var(--amber)' }}>lc</span>
-          <span style={{ color: 'var(--text-dim)' }}>/</span>
-          <span style={{ color: 'var(--text)' }}>companion</span>
+        <span className='brand'>
+          <span className='brand-after'>after</span>
+          <span className='brand-code'>Code</span>
         </span>
 
         <div style={{ flex: 1 }} />

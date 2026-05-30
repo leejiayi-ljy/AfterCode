@@ -52,8 +52,8 @@ export default async function handler(req, res) {
         },
       },
     })
-
-    return res.json(message.parsed_output)
+    const text = message.content.find((b) => b.type === 'text')?.text
+    return res.json(JSON.parse(text))
   } catch (err) {
     console.error('Claude API error:', err)
     return res.status(502).json({ error: 'Upstream API error' })
