@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import CodeEditor from './components/CodeEditor.jsx'
 import AnalysisPanel from './components/AnalysisPanel.jsx'
 import SkeletonPanel from './components/SkeletonPanel.jsx'
@@ -73,19 +73,37 @@ function AnalyzeButton({ status, onClick, disabled }) {
   )
 }
 
+const IDLE_PROMPTS = [
+  "brb, judging your code",
+  "don't be shy, paste it",
+  "your O(n!) solution is welcome here",
+  "paste and pray 🙏",
+]
+const idlePrompt = IDLE_PROMPTS[Math.floor(Math.random() * IDLE_PROMPTS.length)]
+
 export default function App() {
-  const [secret, setSecret] = useState(() => localStorage.getItem('lc-secret') || '')
-  const [problem, setProblem] = useState('')
-  const [code, setCode] = useState('')
-  const [language, setLanguage] = useState('python')
+  const [secret, setSecret] = useState(() => localStorage.getItem('secret-token') || '')
+  const [problem, setProblem] = useState(() => localStorage.getItem('ac-problem') || '')
+  const [code, setCode] = useState(() => localStorage.getItem('ac-code') || '')
+  const [language, setLanguage] = useState(() => localStorage.getItem('ac-language') || 'python')
   const [status, setStatus] = useState('idle')
   const [analysis, setAnalysis] = useState(null)
   const [error, setError] = useState(null)
 
   const handleUnlock = useCallback((val) => {
-    localStorage.setItem('lc-secret', val)
+    localStorage.setItem('secret-token', val)
     setSecret(val)
   }, [])
+
+  useEffect(() => {
+    localStorage.setItem('ac-problem', problem)
+  }, [problem])
+  useEffect(() => {
+    localStorage.setItem('ac-code', code)
+  }, [code])
+  useEffect(() => {
+    localStorage.setItem('ac-language', language)
+  }, [language])
 
   const handleAnalyze = useCallback(async () => {
     if (!code.trim()) return
@@ -113,6 +131,17 @@ export default function App() {
       setStatus('error')
     }
   }, [code, language, problem, secret])
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault()
+        if (code.trim() && status !== 'loading') handleAnalyze()
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [code, status, handleAnalyze])
 
   if (!secret) return <SecretGate onUnlock={handleUnlock} />
 
@@ -213,7 +242,7 @@ export default function App() {
             <div className='flex items-center justify-center' style={{ height: '100%' }}>
               <span className='mono' style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
                 <span style={{ color: 'var(--text-muted)', opacity: 0.5 }}>❯ </span>
-                paste a solution
+                {idlePrompt}
                 <span className='cursor' />
               </span>
             </div>
@@ -231,15 +260,36 @@ export default function App() {
                 padding: '12px 14px',
                 color: 'var(--red)',
                 fontSize: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '12px',
               }}
             >
-              ✕ {error}
+              <span>✕ {error}</span>
+              <button
+                onClick={handleAnalyze}
+                style={{
+                  background: 'none',
+                  border: '1px solid var(--red-border)',
+                  borderRadius: '4px',
+                  padding: '3px 10px',
+                  color: 'var(--red)',
+                  fontFamily: 'IBM Plex Mono, monospace',
+                  fontSize: '11px',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                  opacity: 0.85,
+                }}
+              >
+                retry →
+              </button>
             </div>
           )}
 
           {status === 'success' && analysis && (
             <div className='fade-up'>
-              <AnalysisPanel analysis={analysis} />
+              <AnalysisPanel analysis={analysis} language={language} />
             </div>
           )}
         </div>

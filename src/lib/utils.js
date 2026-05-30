@@ -9,6 +9,63 @@ export function copyToClipboard(text) {
   return navigator.clipboard.writeText(text)
 }
 
+export function formatFullAnalysis(analysis) {
+  const { correctness: c, complexity: cx, code_review: cr, pattern: p } = analysis
+  const lines = []
+
+  lines.push('## Summary')
+  lines.push(analysis.solution_summary)
+  if (analysis.input_caveats) lines.push(`\n> ⚠ ${analysis.input_caveats}`)
+
+  lines.push('\n## Correctness')
+  lines.push(`**${c.assessment.replace(/_/g, ' ')}** — ${c.reasoning}`)
+  if (c.edge_cases.length) {
+    lines.push('\n**Edge cases:**')
+    c.edge_cases.forEach((e) => lines.push(`- ${e}`))
+  }
+
+  lines.push('\n## Complexity')
+  lines.push(`| | |`)
+  lines.push(`|---|---|`)
+  lines.push(`| Time | \`${cx.time}\` |`)
+  lines.push(`| Space | \`${cx.space}\` |`)
+  lines.push(`\n${cx.reasoning}`)
+
+  lines.push('\n## Code Review')
+  if (cr.strengths.length) {
+    lines.push('\n**Strengths:**')
+    cr.strengths.forEach((s) => lines.push(`- ${s}`))
+  }
+  if (cr.improvements.length) {
+    lines.push('\n**Improvements:**')
+    cr.improvements.forEach((i) => lines.push(`- **${i.issue}**\n  → ${i.suggestion}`))
+  }
+
+  lines.push('\n## Alternatives')
+  analysis.alternatives.forEach((alt, i) => {
+    lines.push(`\n### ${i + 1}. ${alt.approach} \`${alt.complexity}\``)
+    lines.push(alt.reasoning)
+    lines.push(`\n> ${alt.tradeoff}`)
+    if (alt.code_example) lines.push(`\n\`\`\`\n${alt.code_example}\n\`\`\``)
+  })
+
+  lines.push('\n## Pattern')
+  lines.push(`**${p.category}**`)
+  lines.push(`\n${p.explanation}`)
+  if (p.similar_problems.length) {
+    lines.push('\n**Drill these next:**')
+    p.similar_problems.forEach((sp, i) => {
+      const eg = sp.named_example ? ` — e.g. *"${sp.named_example}"*` : ''
+      lines.push(`${i + 1}. ${sp.problem_type}${eg}`)
+    })
+  }
+
+  lines.push('\n## Follow-up')
+  lines.push(`> "${analysis.interviewer_followup}"`)
+
+  return lines.join('\n')
+}
+
 export function formatSectionAsText(section, analysis) {
   const parts = []
   switch (section) {

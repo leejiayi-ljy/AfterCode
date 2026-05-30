@@ -18,46 +18,54 @@ function getLanguageExtension(language) {
   }
 }
 
-export default function CodeEditor({ language, value, onChange }) {
+const readOnlyTheme = EditorView.theme({
+  '&': { height: 'auto' },
+  '.cm-scroller': { overflow: 'auto', maxHeight: '220px' },
+  '.cm-cursor': { display: 'none' },
+})
+
+export default function CodeEditor({ language, value, onChange, readOnly = false }) {
   const containerRef = useRef(null)
   const viewRef = useRef(null)
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
 
-  // Create/destroy editor
   useEffect(() => {
+    const extensions = [
+      basicSetup,
+      oneDark,
+      getLanguageExtension(language),
+    ]
+
+    if (readOnly) {
+      extensions.push(EditorState.readOnly.of(true))
+      extensions.push(EditorView.editable.of(false))
+      extensions.push(readOnlyTheme)
+    } else {
+      extensions.push(
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged) onChangeRef.current(update.state.doc.toString())
+        })
+      )
+    }
+
     const view = new EditorView({
-      state: EditorState.create({
-        doc: value,
-        extensions: [
-          basicSetup,
-          oneDark,
-          getLanguageExtension(language),
-          EditorView.updateListener.of((update) => {
-            if (update.docChanged) {
-              onChangeRef.current(update.state.doc.toString())
-            }
-          }),
-        ],
-      }),
+      state: EditorState.create({ doc: value, extensions }),
       parent: containerRef.current,
     })
     viewRef.current = view
     return () => view.destroy()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language]) // rebuild when language changes
+  }, [language, readOnly])
 
-  // Sync external value changes (e.g. clear)
   useEffect(() => {
     const view = viewRef.current
-    if (!view) return
+    if (!view || readOnly) return
     const current = view.state.doc.toString()
     if (current !== value) {
-      view.dispatch({
-        changes: { from: 0, to: current.length, insert: value },
-      })
+      view.dispatch({ changes: { from: 0, to: current.length, insert: value } })
     }
-  }, [value])
+  }, [value, readOnly])
 
-  return <div ref={containerRef} className='h-full' />
+  return <div ref={containerRef} className={readOnly ? '' : 'h-full'} />
 }

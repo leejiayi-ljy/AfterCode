@@ -94,9 +94,13 @@
           "tradeoff": {
             "type": "string",
             "description": "When you would pick this over the submitted approach, and what it costs."
+          },
+          "code_example": {
+            "type": "string",
+            "description": "A concise, working implementation of this approach in the same language as the submitted solution. Focus on the key logic — omit boilerplate like class/function wrapper if it obscures the idea."
           }
         },
-        "required": ["approach", "reasoning", "complexity", "tradeoff"],
+        "required": ["approach", "reasoning", "complexity", "tradeoff", "code_example"],
         "additionalProperties": false
       },
       "description": "At least two genuinely different approaches, not minor variations of the submitted one."
