@@ -7,10 +7,14 @@ import { oneDark } from '@codemirror/theme-one-dark'
 
 function getLanguageExtension(language) {
   switch (language) {
-    case 'python': return python()
-    case 'javascript': return javascript()
-    case 'typescript': return javascript({ typescript: true })
-    default: return python()
+    case 'python':
+      return python()
+    case 'javascript':
+      return javascript()
+    case 'typescript':
+      return javascript({ typescript: true })
+    default:
+      return python()
   }
 }
 
@@ -29,7 +33,7 @@ export default function CodeEditor({ language, value, onChange }) {
           basicSetup,
           oneDark,
           getLanguageExtension(language),
-          EditorView.updateListener.of(update => {
+          EditorView.updateListener.of((update) => {
             if (update.docChanged) {
               onChangeRef.current(update.state.doc.toString())
             }
@@ -55,5 +59,5 @@ export default function CodeEditor({ language, value, onChange }) {
     }
   }, [value])
 
-  return <div ref={containerRef} className="h-full" />
+  return <div ref={containerRef} className='h-full' />
 }

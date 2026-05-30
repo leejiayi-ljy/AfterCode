@@ -1,10 +1,13 @@
 function SkeletonCard({ rows = [60, 85, 70], header = true }) {
   return (
-    <div className="card" style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      {header && <div className="skeleton" style={{ height: '8px', width: '64px' }} />}
+    <div
+      className='card'
+      style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '12px' }}
+    >
+      {header && <div className='skeleton' style={{ height: '8px', width: '64px' }} />}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
         {rows.map((w, i) => (
-          <div key={i} className="skeleton" style={{ height: '11px', width: `${w}%` }} />
+          <div key={i} className='skeleton' style={{ height: '11px', width: `${w}%` }} />
         ))}
       </div>
     </div>

@@ -12,32 +12,33 @@ const LANGUAGES = [
 function SecretGate({ onUnlock }) {
   const [value, setValue] = useState('')
   return (
-    <div style={{ height: '100%', background: 'var(--bg)' }} className="flex flex-col items-center justify-center gap-10">
-      <div className="flex flex-col items-center gap-2">
-        <div className="mono" style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
+    <div
+      style={{ height: '100%', background: 'var(--bg)' }}
+      className='flex flex-col items-center justify-center gap-10'
+    >
+      <div className='flex flex-col items-center gap-2'>
+        <div className='mono' style={{ fontSize: '15px', letterSpacing: '-0.02em' }}>
           <span style={{ color: 'var(--amber)' }}>lc</span>
           <span style={{ color: 'var(--text-muted)' }}>/</span>
           <span style={{ color: 'var(--text)' }}>companion</span>
         </div>
-        <span className="label" style={{ letterSpacing: '0.18em' }}>private</span>
+        <span className='label' style={{ letterSpacing: '0.18em' }}>
+          private
+        </span>
       </div>
 
-      <div className="flex flex-col gap-2.5" style={{ width: '260px' }}>
+      <div className='flex flex-col gap-2.5' style={{ width: '260px' }}>
         <input
-          type="password"
+          type='password'
           value={value}
-          onChange={e => setValue(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && value && onUnlock(value)}
-          placeholder="secret"
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && value && onUnlock(value)}
+          placeholder='secret'
           autoFocus
-          className="field mono"
+          className='field mono'
           style={{ letterSpacing: '0.05em' }}
         />
-        <button
-          disabled={!value}
-          onClick={() => onUnlock(value)}
-          className="btn-analyze"
-        >
+        <button disabled={!value} onClick={() => onUnlock(value)} className='btn-analyze'>
           unlock →
         </button>
       </div>
@@ -47,13 +48,15 @@ function SecretGate({ onUnlock }) {
 
 function AnalyzeButton({ status, onClick, disabled }) {
   return (
-    <button onClick={onClick} disabled={disabled} className="btn-analyze">
+    <button onClick={onClick} disabled={disabled} className='btn-analyze'>
       {status === 'loading' ? (
         <span style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
           analyzing
-          <span className="ldot" style={{ marginLeft: '4px' }}>.</span>
-          <span className="ldot">.</span>
-          <span className="ldot">.</span>
+          <span className='ldot' style={{ marginLeft: '4px' }}>
+            .
+          </span>
+          <span className='ldot'>.</span>
+          <span className='ldot'>.</span>
         </span>
       ) : (
         '→ analyze'
@@ -108,11 +111,10 @@ export default function App() {
   const canAnalyze = code.trim().length > 0 && status !== 'loading'
 
   return (
-    <div className="flex flex-col" style={{ height: '100%', background: 'var(--bg)' }}>
-
+    <div className='flex flex-col' style={{ height: '100%', background: 'var(--bg)' }}>
       {/* ── Header ── */}
       <header
-        className="flex items-center flex-shrink-0"
+        className='flex items-center flex-shrink-0'
         style={{
           borderBottom: '1px solid var(--border)',
           padding: '0 18px',
@@ -120,7 +122,7 @@ export default function App() {
           gap: '12px',
         }}
       >
-        <span className="mono" style={{ fontSize: '13px', letterSpacing: '-0.01em' }}>
+        <span className='mono' style={{ fontSize: '13px', letterSpacing: '-0.01em' }}>
           <span style={{ color: 'var(--amber)' }}>lc</span>
           <span style={{ color: 'var(--text-dim)' }}>/</span>
           <span style={{ color: 'var(--text)' }}>companion</span>
@@ -128,10 +130,10 @@ export default function App() {
 
         <div style={{ flex: 1 }} />
 
-        <div className="flex items-center gap-2">
-          <span className="status-dot" data-status={status} />
+        <div className='flex items-center gap-2'>
+          <span className='status-dot' data-status={status} />
           {status !== 'idle' && (
-            <span className="label" style={{ letterSpacing: '0.10em', opacity: 0.8 }}>
+            <span className='label' style={{ letterSpacing: '0.10em', opacity: 0.8 }}>
               {status === 'loading' ? 'analyzing' : status}
             </span>
           )}
@@ -139,11 +141,10 @@ export default function App() {
       </header>
 
       {/* ── Body ── */}
-      <div className="flex flex-1 min-h-0">
-
+      <div className='flex flex-1 min-h-0'>
         {/* Left panel */}
         <div
-          className="flex flex-col flex-shrink-0"
+          className='flex flex-col flex-shrink-0'
           style={{
             width: '440px',
             borderRight: '1px solid var(--border)',
@@ -152,8 +153,8 @@ export default function App() {
           }}
         >
           {/* Language tabs */}
-          <div className="flex items-center gap-1">
-            {LANGUAGES.map(l => (
+          <div className='flex items-center gap-1'>
+            {LANGUAGES.map((l) => (
               <button
                 key={l.value}
                 onClick={() => setLanguage(l.value)}
@@ -165,22 +166,22 @@ export default function App() {
           </div>
 
           {/* Problem */}
-          <div className="flex flex-col gap-2">
-            <span className="label">problem</span>
+          <div className='flex flex-col gap-2'>
+            <span className='label'>problem</span>
             <textarea
               value={problem}
-              onChange={e => setProblem(e.target.value)}
-              placeholder="paste description or URL (optional)"
+              onChange={(e) => setProblem(e.target.value)}
+              placeholder='paste description or URL (optional)'
               rows={3}
-              className="field"
+              className='field'
             />
           </div>
 
           {/* Solution editor */}
-          <div className="flex flex-col flex-1 min-h-0 gap-2">
-            <span className="label">solution</span>
+          <div className='flex flex-col flex-1 min-h-0 gap-2'>
+            <span className='label'>solution</span>
             <div
-              className="flex-1 min-h-0 overflow-hidden"
+              className='flex-1 min-h-0 overflow-hidden'
               style={{
                 background: 'var(--surface)',
                 border: '1px solid var(--border)',
@@ -196,19 +197,13 @@ export default function App() {
         </div>
 
         {/* Right panel */}
-        <div className="flex-1 overflow-y-auto" style={{ padding: '14px' }}>
+        <div className='flex-1 overflow-y-auto' style={{ padding: '14px' }}>
           {status === 'idle' && (
-            <div
-              className="flex items-center justify-center"
-              style={{ height: '100%' }}
-            >
-              <span
-                className="mono"
-                style={{ fontSize: '12px', color: 'var(--text-dim)' }}
-              >
+            <div className='flex items-center justify-center' style={{ height: '100%' }}>
+              <span className='mono' style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
                 <span style={{ color: 'var(--text-muted)', opacity: 0.5 }}>❯ </span>
                 paste a solution
-                <span className="cursor" />
+                <span className='cursor' />
               </span>
             </div>
           )}
@@ -217,7 +212,7 @@ export default function App() {
 
           {status === 'error' && (
             <div
-              className="mono"
+              className='mono'
               style={{
                 background: 'var(--red-dim)',
                 border: '1px solid var(--red-border)',
@@ -232,7 +227,7 @@ export default function App() {
           )}
 
           {status === 'success' && analysis && (
-            <div className="fade-up">
+            <div className='fade-up'>
               <AnalysisPanel analysis={analysis} />
             </div>
           )}

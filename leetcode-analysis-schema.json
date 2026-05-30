@@ -38,7 +38,10 @@
           "description": "Derive complexity from the actual loops, recursion, and data structures in THIS code. Identify what drives the bound BEFORE stating it. Note any hidden costs."
         },
         "time": { "type": "string", "description": "Big-O time, e.g. O(n log n)." },
-        "space": { "type": "string", "description": "Big-O space; note whether output is included." }
+        "space": {
+          "type": "string",
+          "description": "Big-O space; note whether output is included."
+        }
       },
       "required": ["reasoning", "time", "space"],
       "additionalProperties": false
@@ -56,7 +59,10 @@
           "items": {
             "type": "object",
             "properties": {
-              "issue": { "type": "string", "description": "The specific problem, ideally pointing at a line, name, or construct." },
+              "issue": {
+                "type": "string",
+                "description": "The specific problem, ideally pointing at a line, name, or construct."
+              },
               "suggestion": { "type": "string", "description": "The concrete fix." }
             },
             "required": ["issue", "suggestion"],
@@ -73,10 +79,22 @@
       "items": {
         "type": "object",
         "properties": {
-          "approach": { "type": "string", "description": "Name and how it works, in 1-2 sentences." },
-          "reasoning": { "type": "string", "description": "Why this complexity, derived before the bound is stated." },
-          "complexity": { "type": "string", "description": "Time and space, e.g. 'O(n) time, O(1) space'." },
-          "tradeoff": { "type": "string", "description": "When you would pick this over the submitted approach, and what it costs." }
+          "approach": {
+            "type": "string",
+            "description": "Name and how it works, in 1-2 sentences."
+          },
+          "reasoning": {
+            "type": "string",
+            "description": "Why this complexity, derived before the bound is stated."
+          },
+          "complexity": {
+            "type": "string",
+            "description": "Time and space, e.g. 'O(n) time, O(1) space'."
+          },
+          "tradeoff": {
+            "type": "string",
+            "description": "When you would pick this over the submitted approach, and what it costs."
+          }
         },
         "required": ["approach", "reasoning", "complexity", "tradeoff"],
         "additionalProperties": false
@@ -100,8 +118,14 @@
           "items": {
             "type": "object",
             "properties": {
-              "problem_type": { "type": "string", "description": "The kind of problem and what makes it similar — always provided." },
-              "named_example": { "type": ["string", "null"], "description": "A specific problem name ONLY if confident it exists and matches; otherwise null." }
+              "problem_type": {
+                "type": "string",
+                "description": "The kind of problem and what makes it similar — always provided."
+              },
+              "named_example": {
+                "type": ["string", "null"],
+                "description": "A specific problem name ONLY if confident it exists and matches; otherwise null."
+              }
             },
             "required": ["problem_type", "named_example"],
             "additionalProperties": false

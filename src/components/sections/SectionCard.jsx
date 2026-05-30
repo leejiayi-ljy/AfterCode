@@ -13,21 +13,35 @@ export default function SectionCard({ title, onCopy, children, accentColor, styl
 
   return (
     <div
-      className="card section-card"
-      style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '10px', ...style }}
+      className='card section-card'
+      style={{
+        padding: '14px 16px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        ...style,
+      }}
     >
       {/* Title row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
           {accentColor && (
-            <div style={{ width: '2px', height: '10px', borderRadius: '2px', background: accentColor, flexShrink: 0 }} />
+            <div
+              style={{
+                width: '2px',
+                height: '10px',
+                borderRadius: '2px',
+                background: accentColor,
+                flexShrink: 0,
+              }}
+            />
           )}
-          <span className="label">{title}</span>
+          <span className='label'>{title}</span>
         </div>
         {onCopy && (
           <button
             onClick={handleCopy}
-            className="copy-btn"
+            className='copy-btn'
             style={{
               background: 'none',
               border: 'none',
@@ -38,12 +52,9 @@ export default function SectionCard({ title, onCopy, children, accentColor, styl
               alignItems: 'center',
               borderRadius: '3px',
             }}
-            title="Copy"
+            title='Copy'
           >
-            {copied
-              ? <Check size={11} style={{ color: 'var(--green)' }} />
-              : <Copy size={11} />
-            }
+            {copied ? <Check size={11} style={{ color: 'var(--green)' }} /> : <Copy size={11} />}
           </button>
         )}
       </div>

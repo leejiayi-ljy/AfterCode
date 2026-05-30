@@ -16,7 +16,9 @@ export function formatSectionAsText(section, analysis) {
       parts.push(`Assessment: ${analysis.correctness.assessment}`)
       parts.push(`Reasoning: ${analysis.correctness.reasoning}`)
       if (analysis.correctness.edge_cases.length) {
-        parts.push(`Edge cases:\n${analysis.correctness.edge_cases.map(e => `- ${e}`).join('\n')}`)
+        parts.push(
+          `Edge cases:\n${analysis.correctness.edge_cases.map((e) => `- ${e}`).join('\n')}`,
+        )
       }
       break
     case 'complexity':
@@ -26,10 +28,12 @@ export function formatSectionAsText(section, analysis) {
       break
     case 'code_review':
       if (analysis.code_review.strengths.length) {
-        parts.push(`Strengths:\n${analysis.code_review.strengths.map(s => `+ ${s}`).join('\n')}`)
+        parts.push(`Strengths:\n${analysis.code_review.strengths.map((s) => `+ ${s}`).join('\n')}`)
       }
       if (analysis.code_review.improvements.length) {
-        parts.push(`Improvements:\n${analysis.code_review.improvements.map(i => `- ${i.issue}\n  → ${i.suggestion}`).join('\n')}`)
+        parts.push(
+          `Improvements:\n${analysis.code_review.improvements.map((i) => `- ${i.issue}\n  → ${i.suggestion}`).join('\n')}`,
+        )
       }
       break
     case 'alternatives':
@@ -40,7 +44,9 @@ export function formatSectionAsText(section, analysis) {
     case 'pattern':
       parts.push(`Pattern: ${analysis.pattern.category}`)
       parts.push(analysis.pattern.explanation)
-      parts.push(`Similar problems:\n${analysis.pattern.similar_problems.map(p => `- ${p.problem_type}${p.named_example ? ` (e.g. "${p.named_example}")` : ''}`).join('\n')}`)
+      parts.push(
+        `Similar problems:\n${analysis.pattern.similar_problems.map((p) => `- ${p.problem_type}${p.named_example ? ` (e.g. "${p.named_example}")` : ''}`).join('\n')}`,
+      )
       break
     default:
       return ''

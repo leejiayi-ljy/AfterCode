@@ -6,44 +6,52 @@
 
 /* ── Tokens ─────────────────────────────────── */
 :root {
-  --bg:          #0f0e12;
-  --surface:     #17151b;
-  --surface-hi:  #1e1c24;
+  --bg: #0f0e12;
+  --surface: #17151b;
+  --surface-hi: #1e1c24;
   --surface-hhi: #25232d;
 
-  --text:        #edeae3;
-  --text-muted:  #76717e;
-  --text-dim:    #38343f;
+  --text: #edeae3;
+  --text-muted: #76717e;
+  --text-dim: #38343f;
 
-  --border:      rgba(255,255,255,0.065);
-  --border-hi:   rgba(255,255,255,0.115);
+  --border: rgba(255, 255, 255, 0.065);
+  --border-hi: rgba(255, 255, 255, 0.115);
 
-  --amber:       #e9c94a;
-  --amber-dim:   rgba(233,201,74,0.10);
-  --amber-border:rgba(233,201,74,0.22);
+  --amber: #e9c94a;
+  --amber-dim: rgba(233, 201, 74, 0.1);
+  --amber-border: rgba(233, 201, 74, 0.22);
 
-  --green:       #4cd98a;
-  --green-dim:   rgba(76,217,138,0.10);
-  --green-border:rgba(76,217,138,0.22);
+  --green: #4cd98a;
+  --green-dim: rgba(76, 217, 138, 0.1);
+  --green-border: rgba(76, 217, 138, 0.22);
 
-  --red:         #f27272;
-  --red-dim:     rgba(242,114,114,0.10);
-  --red-border:  rgba(242,114,114,0.22);
+  --red: #f27272;
+  --red-dim: rgba(242, 114, 114, 0.1);
+  --red-border: rgba(242, 114, 114, 0.22);
 
-  --orange:      #f59553;
-  --orange-dim:  rgba(245,149,83,0.10);
-  --orange-border:rgba(245,149,83,0.22);
+  --orange: #f59553;
+  --orange-dim: rgba(245, 149, 83, 0.1);
+  --orange-border: rgba(245, 149, 83, 0.22);
 
-  --blue:        #62a9f7;
-  --blue-dim:    rgba(98,169,247,0.10);
-  --blue-border: rgba(98,169,247,0.22);
+  --blue: #62a9f7;
+  --blue-dim: rgba(98, 169, 247, 0.1);
+  --blue-border: rgba(98, 169, 247, 0.22);
 }
 
 /* ── Reset ───────────────────────────────────── */
 @layer base {
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-  html, body, #root {
+  html,
+  body,
+  #root {
     height: 100%;
     overflow: hidden;
   }
@@ -69,7 +77,9 @@
 }
 
 /* ── Typography ──────────────────────────────── */
-.mono { font-family: 'IBM Plex Mono', monospace; }
+.mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
 
 .label {
   font-family: 'IBM Plex Mono', monospace;
@@ -99,10 +109,16 @@
   color: var(--text-muted);
   background: transparent;
   line-height: 1.8;
-  transition: color 0.12s, background 0.12s, border-color 0.12s;
+  transition:
+    color 0.12s,
+    background 0.12s,
+    border-color 0.12s;
   outline: none;
 }
-.lang-tab:hover:not(.active) { color: var(--text); background: var(--surface-hi); }
+.lang-tab:hover:not(.active) {
+  color: var(--text);
+  background: var(--surface-hi);
+}
 .lang-tab.active {
   color: var(--text);
   background: var(--surface-hi);
@@ -122,28 +138,37 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: opacity 0.12s, transform 0.08s;
+  transition:
+    opacity 0.12s,
+    transform 0.08s;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0;
   flex-shrink: 0;
 }
-.btn-analyze:hover:not(:disabled) { opacity: 0.87; }
-.btn-analyze:active:not(:disabled) { transform: scale(0.988); }
-.btn-analyze:disabled { opacity: 0.22; cursor: not-allowed; }
+.btn-analyze:hover:not(:disabled) {
+  opacity: 0.87;
+}
+.btn-analyze:active:not(:disabled) {
+  transform: scale(0.988);
+}
+.btn-analyze:disabled {
+  opacity: 0.22;
+  cursor: not-allowed;
+}
 
 /* ── Skeleton shimmer ────────────────────────── */
 @keyframes shimmer {
-  0%   { background-position: -800px 0; }
-  100% { background-position: 800px 0; }
+  0% {
+    background-position: -800px 0;
+  }
+  100% {
+    background-position: 800px 0;
+  }
 }
 .skeleton {
-  background: linear-gradient(90deg,
-    var(--surface) 20%,
-    var(--surface-hi) 50%,
-    var(--surface) 80%
-  );
+  background: linear-gradient(90deg, var(--surface) 20%, var(--surface-hi) 50%, var(--surface) 80%);
   background-size: 1600px 100%;
   animation: shimmer 1.8s ease-in-out infinite;
   border-radius: 3px;
@@ -151,8 +176,13 @@
 
 /* ── Blink / cursor ──────────────────────────── */
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 .cursor {
   display: inline-block;
@@ -172,32 +202,62 @@
   background: var(--text-dim);
   flex-shrink: 0;
 }
-.status-dot[data-status="loading"] {
+.status-dot[data-status='loading'] {
   background: var(--amber);
   animation: blink 0.9s ease infinite;
 }
-.status-dot[data-status="success"] { background: var(--green); }
-.status-dot[data-status="error"]   { background: var(--red); }
+.status-dot[data-status='success'] {
+  background: var(--green);
+}
+.status-dot[data-status='error'] {
+  background: var(--red);
+}
 
 /* ── Loading dots (button) ───────────────────── */
-@keyframes ldot { 0%,80%,100%{opacity:0} 40%{opacity:1} }
-.ldot { animation: ldot 1.2s ease-in-out infinite; display: inline-block; }
-.ldot:nth-child(2) { animation-delay: 0.18s; }
-.ldot:nth-child(3) { animation-delay: 0.36s; }
+@keyframes ldot {
+  0%,
+  80%,
+  100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+.ldot {
+  animation: ldot 1.2s ease-in-out infinite;
+  display: inline-block;
+}
+.ldot:nth-child(2) {
+  animation-delay: 0.18s;
+}
+.ldot:nth-child(3) {
+  animation-delay: 0.36s;
+}
 
 /* ── Fade in ─────────────────────────────────── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.fade-up { animation: fadeUp 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+.fade-up {
+  animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 
 /* ── Copy button (reveal on hover) ──────────── */
 .section-card .copy-btn {
   opacity: 0;
   transition: opacity 0.15s;
 }
-.section-card:hover .copy-btn { opacity: 1; }
+.section-card:hover .copy-btn {
+  opacity: 1;
+}
 
 /* ── Correctness bar (left border accent) ────── */
 .correctness-bar {
@@ -208,22 +268,41 @@
 }
 
 /* ── CodeMirror overrides ────────────────────── */
-.cm-editor { height: 100%; font-size: 12px; }
-.cm-editor.cm-focused { outline: none; }
-.cm-scroller { font-family: 'IBM Plex Mono', monospace; }
+.cm-editor {
+  height: 100%;
+  font-size: 12px;
+}
+.cm-editor.cm-focused {
+  outline: none;
+}
+.cm-scroller {
+  font-family: 'IBM Plex Mono', monospace;
+}
 .cm-gutters {
   background: transparent !important;
   border-right: 1px solid var(--border) !important;
   color: var(--text-dim) !important;
   min-width: 36px !important;
 }
-.cm-lineNumbers .cm-gutterElement { padding: 0 8px 0 4px !important; }
+.cm-lineNumbers .cm-gutterElement {
+  padding: 0 8px 0 4px !important;
+}
 
 /* ── Scrollbar ───────────────────────────────── */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--surface-hhi); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface-hhi);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
 
 /* ── Input / textarea shared ─────────────────── */
 .field {
@@ -240,5 +319,10 @@
   resize: none;
   width: 100%;
 }
-.field::placeholder { color: var(--text-muted); opacity: 0.45; }
-.field:focus { border-color: var(--border-hi); }
+.field::placeholder {
+  color: var(--text-muted);
+  opacity: 0.45;
+}
+.field:focus {
+  border-color: var(--border-hi);
+}

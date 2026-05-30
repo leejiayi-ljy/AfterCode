@@ -3,10 +3,7 @@ import { copyToClipboard } from '../../lib/utils.js'
 
 export default function SolutionSummary({ analysis }) {
   return (
-    <SectionCard
-      title="Summary"
-      onCopy={() => copyToClipboard(analysis.solution_summary)}
-    >
+    <SectionCard title='Summary' onCopy={() => copyToClipboard(analysis.solution_summary)}>
       <p style={{ fontSize: '13px', color: 'var(--text)', lineHeight: '1.65' }}>
         {analysis.solution_summary}
       </p>

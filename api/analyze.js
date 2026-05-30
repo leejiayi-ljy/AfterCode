@@ -1,5 +1,4 @@
 import Anthropic from '@anthropic-ai/sdk'
-import { jsonSchemaOutputFormat } from '@anthropic-ai/sdk/helpers/json-schema'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
@@ -47,7 +46,10 @@ export default async function handler(req, res) {
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: userMessage }],
       output_config: {
-        format: jsonSchemaOutputFormat(ANALYSIS_SCHEMA),
+        format: {
+          type: 'json_schema',
+          schema: ANALYSIS_SCHEMA,
+        },
       },
     })
 

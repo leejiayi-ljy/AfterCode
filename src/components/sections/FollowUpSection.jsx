@@ -4,7 +4,7 @@ import { copyToClipboard } from '../../lib/utils.js'
 export default function FollowUpSection({ analysis }) {
   return (
     <SectionCard
-      title="Interviewer follow-up"
+      title='Interviewer follow-up'
       onCopy={() => copyToClipboard(analysis.interviewer_followup)}
     >
       <div

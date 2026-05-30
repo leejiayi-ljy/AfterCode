@@ -5,14 +5,14 @@ export default function PatternSection({ analysis }) {
   const { pattern } = analysis
   return (
     <SectionCard
-      title="Pattern"
-      accentColor="var(--blue)"
+      title='Pattern'
+      accentColor='var(--blue)'
       onCopy={() => copyToClipboard(formatSectionAsText('pattern', analysis))}
     >
       {/* Category chip */}
       <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
         <span
-          className="mono"
+          className='mono'
           style={{
             fontSize: '10px',
             fontWeight: 500,
@@ -34,10 +34,20 @@ export default function PatternSection({ analysis }) {
 
       {/* Similar problems */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-        <span className="label" style={{ fontSize: '8px', marginBottom: '2px' }}>drill these next</span>
+        <span className='label' style={{ fontSize: '8px', marginBottom: '2px' }}>
+          drill these next
+        </span>
         {pattern.similar_problems.map((p, i) => (
           <div key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px' }}>
-            <span className="mono" style={{ color: 'var(--text-dim)', flexShrink: 0, fontSize: '10px', marginTop: '2px' }}>
+            <span
+              className='mono'
+              style={{
+                color: 'var(--text-dim)',
+                flexShrink: 0,
+                fontSize: '10px',
+                marginTop: '2px',
+              }}
+            >
               {String(i + 1).padStart(2, '0')}
             </span>
             <span>

@@ -2,11 +2,36 @@ import SectionCard from './SectionCard.jsx'
 import { copyToClipboard, formatSectionAsText } from '../../lib/utils.js'
 
 const VERDICT = {
-  correct:          { label: 'correct',          color: 'var(--green)',  dim: 'var(--green-dim)',  border: 'var(--green-border)' },
-  likely_correct:   { label: 'likely correct',   color: 'var(--blue)',   dim: 'var(--blue-dim)',   border: 'var(--blue-border)' },
-  has_issues:       { label: 'has issues',       color: 'var(--orange)', dim: 'var(--orange-dim)', border: 'var(--orange-border)' },
-  incorrect:        { label: 'incorrect',        color: 'var(--red)',    dim: 'var(--red-dim)',    border: 'var(--red-border)' },
-  cannot_determine: { label: 'unclear',          color: 'var(--text-muted)', dim: 'transparent', border: 'var(--border)' },
+  correct: {
+    label: 'correct',
+    color: 'var(--green)',
+    dim: 'var(--green-dim)',
+    border: 'var(--green-border)',
+  },
+  likely_correct: {
+    label: 'likely correct',
+    color: 'var(--blue)',
+    dim: 'var(--blue-dim)',
+    border: 'var(--blue-border)',
+  },
+  has_issues: {
+    label: 'has issues',
+    color: 'var(--orange)',
+    dim: 'var(--orange-dim)',
+    border: 'var(--orange-border)',
+  },
+  incorrect: {
+    label: 'incorrect',
+    color: 'var(--red)',
+    dim: 'var(--red-dim)',
+    border: 'var(--red-border)',
+  },
+  cannot_determine: {
+    label: 'unclear',
+    color: 'var(--text-muted)',
+    dim: 'transparent',
+    border: 'var(--border)',
+  },
 }
 
 export default function CorrectnessSection({ analysis }) {
@@ -15,13 +40,13 @@ export default function CorrectnessSection({ analysis }) {
 
   return (
     <SectionCard
-      title="Correctness"
+      title='Correctness'
       accentColor={v.color}
       onCopy={() => copyToClipboard(formatSectionAsText('correctness', analysis))}
     >
       {/* Verdict chip */}
       <div
-        className="mono"
+        className='mono'
         style={{
           display: 'inline-block',
           fontSize: '10px',
@@ -44,7 +69,15 @@ export default function CorrectnessSection({ analysis }) {
       {correctness.edge_cases.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {correctness.edge_cases.map((ec, i) => (
-            <div key={i} style={{ display: 'flex', gap: '8px', fontSize: '11.5px', color: 'var(--text-muted)' }}>
+            <div
+              key={i}
+              style={{
+                display: 'flex',
+                gap: '8px',
+                fontSize: '11.5px',
+                color: 'var(--text-muted)',
+              }}
+            >
               <span style={{ color: 'var(--text-dim)', flexShrink: 0 }}>·</span>
               {ec}
             </div>
