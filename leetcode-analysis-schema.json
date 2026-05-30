@@ -99,7 +99,6 @@
         "required": ["approach", "reasoning", "complexity", "tradeoff"],
         "additionalProperties": false
       },
-      "minItems": 2,
       "description": "At least two genuinely different approaches, not minor variations of the submitted one."
     },
     "pattern": {
@@ -130,7 +129,6 @@
             "required": ["problem_type", "named_example"],
             "additionalProperties": false
           },
-          "minItems": 3,
           "description": "At least three. Describe the type; name a specific problem only when confident."
         }
       },
