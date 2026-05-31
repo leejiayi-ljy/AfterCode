@@ -21,8 +21,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const secret = req.headers['x-app-secret']
-  if (!secret || secret !== process.env.APP_SECRET) {
+  const headerSecret = req.headers['x-app-secret']
+  if (headerSecret && headerSecret !== process.env.APP_SECRET) {
     return res.status(401).json({ error: 'Unauthorized' })
   }
 

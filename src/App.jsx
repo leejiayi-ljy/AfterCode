@@ -9,60 +9,13 @@ const LANGUAGES = [
   { value: 'typescript', label: 'ts' },
 ]
 
-function SecretGate({ onUnlock }) {
-  const [value, setValue] = useState('')
-  return (
-    <div
-      style={{ height: '100%', background: 'var(--bg)' }}
-      className='flex flex-col items-center justify-center gap-10'
-    >
-      <div className='flex flex-col items-center gap-3'>
-        <div className='brand'>
-          <span className='brand-after'>after</span>
-          <span className='brand-code'>Code</span>
-        </div>
-        <span className='label' style={{ letterSpacing: '0.2em', opacity: 0.6 }}>
-          private access
-        </span>
-      </div>
-
-      <div
-        className='flex flex-col gap-2.5'
-        style={{
-          width: '260px',
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: '8px',
-          padding: '16px',
-        }}
-      >
-        <input
-          type='password'
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && value && onUnlock(value)}
-          placeholder='enter secret'
-          autoFocus
-          className='field mono'
-          style={{ letterSpacing: '0.05em' }}
-        />
-        <button disabled={!value} onClick={() => onUnlock(value)} className='btn-analyze'>
-          unlock →
-        </button>
-      </div>
-    </div>
-  )
-}
-
 function AnalyzeButton({ status, onClick, disabled }) {
   return (
     <button onClick={onClick} disabled={disabled} className='btn-analyze'>
       {status === 'loading' ? (
         <span style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
           analyzing
-          <span className='ldot' style={{ marginLeft: '4px' }}>
-            .
-          </span>
+          <span className='ldot' style={{ marginLeft: '4px' }}>.</span>
           <span className='ldot'>.</span>
           <span className='ldot'>.</span>
         </span>
@@ -82,7 +35,6 @@ const IDLE_PROMPTS = [
 const idlePrompt = IDLE_PROMPTS[Math.floor(Math.random() * IDLE_PROMPTS.length)]
 
 export default function App() {
-  const [secret, setSecret] = useState(() => localStorage.getItem('secret-token') || '')
   const [problem, setProblem] = useState(() => localStorage.getItem('ac-problem') || '')
   const [code, setCode] = useState(() => localStorage.getItem('ac-code') || '')
   const [language, setLanguage] = useState(() => localStorage.getItem('ac-language') || 'python')
@@ -90,20 +42,9 @@ export default function App() {
   const [analysis, setAnalysis] = useState(null)
   const [error, setError] = useState(null)
 
-  const handleUnlock = useCallback((val) => {
-    localStorage.setItem('secret-token', val)
-    setSecret(val)
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem('ac-problem', problem)
-  }, [problem])
-  useEffect(() => {
-    localStorage.setItem('ac-code', code)
-  }, [code])
-  useEffect(() => {
-    localStorage.setItem('ac-language', language)
-  }, [language])
+  useEffect(() => { localStorage.setItem('ac-problem', problem) }, [problem])
+  useEffect(() => { localStorage.setItem('ac-code', code) }, [code])
+  useEffect(() => { localStorage.setItem('ac-language', language) }, [language])
 
   const handleAnalyze = useCallback(async () => {
     if (!code.trim()) return
@@ -111,16 +52,16 @@ export default function App() {
     setError(null)
 
     try {
+      const headers = { 'Content-Type': 'application/json' }
+      const storedSecret = localStorage.getItem('x-app-secret')
+      if (storedSecret) headers['x-app-secret'] = storedSecret
+
       const res = await fetch('/api/analyze', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-app-secret': secret,
-        },
+        headers,
         body: JSON.stringify({ problem, code, language }),
       })
 
-      if (res.status === 401) throw new Error('Invalid secret — clear localStorage and re-enter.')
       if (!res.ok) throw new Error(`Server error: ${res.status}`)
 
       const data = await res.json()
@@ -130,7 +71,7 @@ export default function App() {
       setError(e.message)
       setStatus('error')
     }
-  }, [code, language, problem, secret])
+  }, [code, language, problem])
 
   useEffect(() => {
     const onKey = (e) => {
@@ -142,8 +83,6 @@ export default function App() {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [code, status, handleAnalyze])
-
-  if (!secret) return <SecretGate onUnlock={handleUnlock} />
 
   const canAnalyze = code.trim().length > 0 && status !== 'loading'
 
