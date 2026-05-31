@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
+import { Sun, Moon } from 'lucide-react'
 import CodeEditor from './components/CodeEditor.jsx'
 import AnalysisPanel from './components/AnalysisPanel.jsx'
 import SkeletonPanel from './components/SkeletonPanel.jsx'
@@ -30,17 +31,23 @@ const IDLE_PROMPTS = [
   "brb, judging your code",
   "don't be shy, paste it",
   "your O(n!) solution is welcome here",
-  "paste and pray 🙏",
+  "paste and pray",
 ]
 const idlePrompt = IDLE_PROMPTS[Math.floor(Math.random() * IDLE_PROMPTS.length)]
 
 export default function App() {
+  const [isDark, setIsDark] = useState(() => localStorage.getItem('ac-theme') !== 'light')
   const [problem, setProblem] = useState(() => localStorage.getItem('ac-problem') || '')
   const [code, setCode] = useState(() => localStorage.getItem('ac-code') || '')
   const [language, setLanguage] = useState(() => localStorage.getItem('ac-language') || 'python')
   const [status, setStatus] = useState('idle')
   const [analysis, setAnalysis] = useState(null)
   const [error, setError] = useState(null)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
+    localStorage.setItem('ac-theme', isDark ? 'dark' : 'light')
+  }, [isDark])
 
   useEffect(() => { localStorage.setItem('ac-problem', problem) }, [problem])
   useEffect(() => { localStorage.setItem('ac-code', code) }, [code])
@@ -89,19 +96,7 @@ export default function App() {
   return (
     <div className='flex flex-col' style={{ height: '100%', background: 'var(--bg)' }}>
       {/* ── Header ── */}
-      <header
-        className='flex items-center flex-shrink-0'
-        style={{
-          borderBottom: '1px solid var(--border)',
-          padding: '0 18px',
-          height: '42px',
-          gap: '12px',
-          background: 'rgba(31, 35, 53, 0.6)',
-          backdropFilter: 'blur(8px)',
-          position: 'relative',
-          zIndex: 10,
-        }}
-      >
+      <header className='app-header flex items-center flex-shrink-0'>
         <span className='brand'>
           <span className='brand-after'>after</span>
           <span className='brand-code'>Code</span>
@@ -109,13 +104,20 @@ export default function App() {
 
         <div style={{ flex: 1 }} />
 
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-3'>
           <span className='status-dot' data-status={status} />
           {status !== 'idle' && (
             <span className='label' style={{ letterSpacing: '0.10em', opacity: 0.8 }}>
               {status === 'loading' ? 'analyzing' : status}
             </span>
           )}
+          <button
+            onClick={() => setIsDark(d => !d)}
+            className='theme-toggle'
+            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {isDark ? <Sun size={13} /> : <Moon size={13} />}
+          </button>
         </div>
       </header>
 
@@ -123,7 +125,7 @@ export default function App() {
       <div className='flex flex-1 min-h-0'>
         {/* Left panel */}
         <div
-          className='flex flex-col flex-shrink-0'
+          className='flex flex-col flex-shrink-0 left-panel'
           style={{
             width: '440px',
             borderRight: '1px solid var(--border)',
@@ -167,7 +169,7 @@ export default function App() {
                 borderRadius: '5px',
               }}
             >
-              <CodeEditor language={language} value={code} onChange={setCode} />
+              <CodeEditor language={language} value={code} onChange={setCode} isDark={isDark} />
             </div>
           </div>
 
@@ -228,7 +230,7 @@ export default function App() {
 
           {status === 'success' && analysis && (
             <div className='fade-up'>
-              <AnalysisPanel analysis={analysis} language={language} />
+              <AnalysisPanel analysis={analysis} language={language} isDark={isDark} />
             </div>
           )}
         </div>

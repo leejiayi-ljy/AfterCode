@@ -4,7 +4,7 @@ import SectionCard from './SectionCard.jsx'
 import CodeEditor from '../CodeEditor.jsx'
 import { copyToClipboard, formatSectionAsText } from '../../lib/utils.js'
 
-function CodeBlock({ code, language }) {
+function CodeBlock({ code, language, isDark }) {
   const [copied, setCopied] = useState(false)
   const handle = async () => {
     await copyToClipboard(code)
@@ -13,7 +13,7 @@ function CodeBlock({ code, language }) {
   }
   return (
     <div style={{ position: 'relative', border: '1px solid var(--border)', borderRadius: '5px', overflow: 'hidden' }}>
-      <CodeEditor language={language} value={code} readOnly />
+      <CodeEditor language={language} value={code} readOnly isDark={isDark} />
       <button
         onClick={handle}
         style={{
@@ -37,7 +37,7 @@ function CodeBlock({ code, language }) {
   )
 }
 
-export default function AlternativesSection({ analysis, language }) {
+export default function AlternativesSection({ analysis, language, isDark }) {
   return (
     <SectionCard
       title='Alternatives'
@@ -81,7 +81,7 @@ export default function AlternativesSection({ analysis, language }) {
 
             {alt.code_example && (
               <div style={{ paddingLeft: '22px' }}>
-                <CodeBlock code={alt.code_example} language={language} />
+                <CodeBlock code={alt.code_example} language={language} isDark={isDark} />
               </div>
             )}
           </div>

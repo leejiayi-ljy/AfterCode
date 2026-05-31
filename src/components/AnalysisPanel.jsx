@@ -9,7 +9,7 @@ import PatternSection from './sections/PatternSection.jsx'
 import FollowUpSection from './sections/FollowUpSection.jsx'
 import { copyToClipboard, formatFullAnalysis } from '../lib/utils.js'
 
-export default function AnalysisPanel({ analysis, language }) {
+export default function AnalysisPanel({ analysis, language, isDark }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopyAll = async () => {
@@ -51,7 +51,7 @@ export default function AnalysisPanel({ analysis, language }) {
         <ComplexitySection analysis={analysis} />
       </div>
       <CodeReviewSection analysis={analysis} />
-      <AlternativesSection analysis={analysis} language={language} />
+      <AlternativesSection analysis={analysis} language={language} isDark={isDark} />
       <PatternSection analysis={analysis} />
       <FollowUpSection analysis={analysis} />
     </div>
