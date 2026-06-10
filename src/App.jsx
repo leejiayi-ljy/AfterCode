@@ -4,6 +4,7 @@ import CodeEditor from './components/CodeEditor.jsx'
 import AnalysisPanel from './components/AnalysisPanel.jsx'
 import SkeletonPanel from './components/SkeletonPanel.jsx'
 import { DEMO } from './demo.js'
+import { Analytics } from "@vercel/analytics/next"
 
 const LANGUAGES = [
   { value: 'python', label: 'py' },
@@ -172,7 +173,6 @@ export default function App() {
           </button>
         </div>
       </header>
-
       {/* ── Body ── */}
       <div className='flex flex-1 min-h-0'>
         {/* Left panel */}
@@ -401,6 +401,7 @@ export default function App() {
           )}
         </div>
       </div>
+      <Analytics />
     </div>
   )
 }
