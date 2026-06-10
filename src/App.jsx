@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, KeyRound } from 'lucide-react'
 import CodeEditor from './components/CodeEditor.jsx'
 import AnalysisPanel from './components/AnalysisPanel.jsx'
 import SkeletonPanel from './components/SkeletonPanel.jsx'
@@ -46,7 +46,6 @@ export default function App() {
   const [error, setError] = useState(null)
   const [secretKey, setSecretKey] = useState('')
   const [hasSecret, setHasSecret] = useState(() => !!localStorage.getItem('x-app-secret'))
-  const [secretSaved, setSecretSaved] = useState(false)
   const [authError, setAuthError] = useState(null)
 
   useEffect(() => {
@@ -81,7 +80,7 @@ export default function App() {
       })
 
       if (!res.ok) {
-        if (res.status === 401) {
+        if (res.status === 401 || res.status === 403) {
           localStorage.removeItem('x-app-secret')
           setHasSecret(false)
           setAuthError('incorrect key')
@@ -117,9 +116,15 @@ export default function App() {
     if (!secretKey.trim()) return
     localStorage.setItem('x-app-secret', secretKey.trim())
     setHasSecret(true)
-    setSecretSaved(true)
-    setTimeout(() => setSecretSaved(false), 1500)
   }, [secretKey])
+
+  const handleResetSecret = useCallback(() => {
+    localStorage.removeItem('x-app-secret')
+    setSecretKey('')
+    setHasSecret(false)
+    setAuthError(null)
+    setStatus('idle')
+  }, [])
 
   const handleLoadDemo = useCallback(() => {
     setLanguage(DEMO.language)
@@ -148,6 +153,15 @@ export default function App() {
             <span className='label' style={{ letterSpacing: '0.10em', opacity: 0.8 }}>
               {status === 'loading' ? 'analyzing' : status}
             </span>
+          )}
+          {hasSecret && (
+            <button
+              onClick={handleResetSecret}
+              className='theme-toggle'
+              title='Reset secret key'
+            >
+              <KeyRound size={13} />
+            </button>
           )}
           <button
             onClick={() => setIsDark((d) => !d)}
@@ -265,7 +279,7 @@ export default function App() {
                     className='btn-analyze'
                     style={{ width: '100%' }}
                   >
-                    {secretSaved ? 'unlocked ✓' : 'unlock →'}
+                    unlock →
                   </button>
                 </div>
 
@@ -308,12 +322,36 @@ export default function App() {
           )}
 
           {status === 'idle' && hasSecret && (
-            <div className='flex items-center justify-center' style={{ height: '100%' }}>
+            <div
+              className='flex flex-col items-center justify-center'
+              style={{ height: '100%', gap: '14px' }}
+            >
               <span className='mono' style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
                 <span style={{ color: 'var(--text-muted)', opacity: 0.5 }}>❯ </span>
                 {idlePrompt}
                 <span className='cursor' />
               </span>
+              <button
+                onClick={handleResetSecret}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  color: 'var(--text-dim)',
+                  fontSize: '11px',
+                  cursor: 'pointer',
+                  fontFamily: 'IBM Plex Mono, monospace',
+                  opacity: 0.6,
+                  textDecoration: 'underline',
+                  textDecorationStyle: 'dotted',
+                  textUnderlineOffset: '2px',
+                  transition: 'opacity 0.15s',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.6')}
+              >
+                update key
+              </button>
             </div>
           )}
 
