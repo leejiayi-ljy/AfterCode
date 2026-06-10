@@ -4,7 +4,7 @@ import CodeEditor from './components/CodeEditor.jsx'
 import AnalysisPanel from './components/AnalysisPanel.jsx'
 import SkeletonPanel from './components/SkeletonPanel.jsx'
 import { DEMO } from './demo.js'
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from '@vercel/analytics/react'
 
 const LANGUAGES = [
   { value: 'python', label: 'py' },
