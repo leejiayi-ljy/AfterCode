@@ -3,6 +3,7 @@ import { Sun, Moon } from 'lucide-react'
 import CodeEditor from './components/CodeEditor.jsx'
 import AnalysisPanel from './components/AnalysisPanel.jsx'
 import SkeletonPanel from './components/SkeletonPanel.jsx'
+import { DEMO } from './demo.js'
 
 const LANGUAGES = [
   { value: 'python', label: 'py' },
@@ -28,10 +29,10 @@ function AnalyzeButton({ status, onClick, disabled }) {
 }
 
 const IDLE_PROMPTS = [
-  "brb, judging your code",
+  'brb, judging your code',
   "don't be shy, paste it",
-  "your O(n!) solution is welcome here",
-  "paste and pray",
+  'your O(n!) solution is welcome here',
+  'paste and pray',
 ]
 const idlePrompt = IDLE_PROMPTS[Math.floor(Math.random() * IDLE_PROMPTS.length)]
 
@@ -43,15 +44,25 @@ export default function App() {
   const [status, setStatus] = useState('idle')
   const [analysis, setAnalysis] = useState(null)
   const [error, setError] = useState(null)
+  const [secretKey, setSecretKey] = useState('')
+  const [hasSecret, setHasSecret] = useState(() => !!localStorage.getItem('x-app-secret'))
+  const [secretSaved, setSecretSaved] = useState(false)
+  const [authError, setAuthError] = useState(null)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
     localStorage.setItem('ac-theme', isDark ? 'dark' : 'light')
   }, [isDark])
 
-  useEffect(() => { localStorage.setItem('ac-problem', problem) }, [problem])
-  useEffect(() => { localStorage.setItem('ac-code', code) }, [code])
-  useEffect(() => { localStorage.setItem('ac-language', language) }, [language])
+  useEffect(() => {
+    localStorage.setItem('ac-problem', problem)
+  }, [problem])
+  useEffect(() => {
+    localStorage.setItem('ac-code', code)
+  }, [code])
+  useEffect(() => {
+    localStorage.setItem('ac-language', language)
+  }, [language])
 
   const handleAnalyze = useCallback(async () => {
     if (!code.trim()) return
@@ -69,7 +80,18 @@ export default function App() {
         body: JSON.stringify({ problem, code, language }),
       })
 
-      if (!res.ok) throw new Error(`Server error: ${res.status}`)
+      if (!res.ok) {
+        if (res.status === 401) {
+          localStorage.removeItem('x-app-secret')
+          setHasSecret(false)
+          setAuthError('incorrect key')
+          setStatus('idle')
+          return
+        }
+        if (res.status === 400) throw new Error('invalid request — make sure code is not empty')
+        if (res.status === 502) throw new Error('upstream api error — claude may be unavailable')
+        throw new Error(`server error (${res.status})`)
+      }
 
       const data = await res.json()
       setAnalysis(data)
@@ -90,6 +112,22 @@ export default function App() {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [code, status, handleAnalyze])
+
+  const handleSaveSecret = useCallback(() => {
+    if (!secretKey.trim()) return
+    localStorage.setItem('x-app-secret', secretKey.trim())
+    setHasSecret(true)
+    setSecretSaved(true)
+    setTimeout(() => setSecretSaved(false), 1500)
+  }, [secretKey])
+
+  const handleLoadDemo = useCallback(() => {
+    setLanguage(DEMO.language)
+    setProblem(DEMO.problem)
+    setCode(DEMO.code)
+    setAnalysis(DEMO.analysis)
+    setStatus('success')
+  }, [])
 
   const canAnalyze = code.trim().length > 0 && status !== 'loading'
 
@@ -112,7 +150,7 @@ export default function App() {
             </span>
           )}
           <button
-            onClick={() => setIsDark(d => !d)}
+            onClick={() => setIsDark((d) => !d)}
             className='theme-toggle'
             title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
@@ -179,7 +217,97 @@ export default function App() {
 
         {/* Right panel */}
         <div className='flex-1 overflow-y-auto' style={{ padding: '14px' }}>
-          {status === 'idle' && (
+          {status === 'idle' && !hasSecret && (
+            <div className='flex items-center justify-center' style={{ height: '100%' }}>
+              <div
+                className='mono'
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '20px',
+                  width: '260px',
+                }}
+              >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <span className='label'>gated tool</span>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      color: authError ? 'var(--red)' : 'var(--text-dim)',
+                      lineHeight: 1.5,
+                      transition: 'color 0.15s',
+                    }}
+                  >
+                    {authError ?? 'secret key is required to run analyses'}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <input
+                    type='password'
+                    value={secretKey}
+                    onChange={(e) => {
+                      setSecretKey(e.target.value)
+                      setAuthError(null)
+                    }}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSaveSecret()}
+                    placeholder='••••••••'
+                    className='field'
+                    style={{
+                      width: '100%',
+                      padding: '8px 10px',
+                      fontSize: '12px',
+                      borderColor: authError ? 'var(--red-border)' : undefined,
+                    }}
+                  />
+                  <button
+                    onClick={handleSaveSecret}
+                    className='btn-analyze'
+                    style={{ width: '100%' }}
+                  >
+                    {secretSaved ? 'unlocked ✓' : 'unlock →'}
+                  </button>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ flex: 1, height: '1px', background: 'var(--border)' }} />
+                  <span style={{ fontSize: '10px', color: 'var(--text-dim)', opacity: 0.5 }}>
+                    or
+                  </span>
+                  <div style={{ flex: 1, height: '1px', background: 'var(--border)' }} />
+                </div>
+
+                <button
+                  onClick={handleLoadDemo}
+                  style={{
+                    width: '100%',
+                    background: 'var(--surface)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '5px',
+                    padding: '8px 12px',
+                    color: 'var(--text-muted)',
+                    fontSize: '11px',
+                    cursor: 'pointer',
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    textAlign: 'center',
+                    transition: 'border-color 0.15s, color 0.15s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border-hi)'
+                    e.currentTarget.style.color = 'var(--text)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border)'
+                    e.currentTarget.style.color = 'var(--text-muted)'
+                  }}
+                >
+                  view demo
+                </button>
+              </div>
+            </div>
+          )}
+
+          {status === 'idle' && hasSecret && (
             <div className='flex items-center justify-center' style={{ height: '100%' }}>
               <span className='mono' style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
                 <span style={{ color: 'var(--text-muted)', opacity: 0.5 }}>❯ </span>

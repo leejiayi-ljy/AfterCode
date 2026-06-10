@@ -1,0 +1,75 @@
+{
+  "solution_summary": "Uses a hash map to store each number's index as the array is iterated once, checking on every step whether the current number's complement already exists in the map.",
+  "input_caveats": null,
+  "correctness": {
+    "reasoning": "The complement check `target - num` correctly handles the case where the pair is found in one pass. Looking up the complement before inserting the current element avoids using the same index twice (e.g. target=6, nums=[3,...] won't pair 3 with itself). The problem guarantees exactly one solution exists, so the function will always return before exhausting the array.",
+    "assessment": "correct",
+    "edge_cases": [
+      "Two identical numbers that sum to target (e.g. [3,3], target=6) — handled correctly because the first 3 is inserted before the second 3 is checked",
+      "Negative numbers (e.g. [-1,2], target=1) — hash map key arithmetic works fine",
+      "Single-element array — not a valid input per problem constraints (guaranteed two numbers exist)",
+      "Large arrays — O(n) time means no TLE concern at LeetCode constraints"
+    ]
+  },
+  "complexity": {
+    "reasoning": "A single pass over n elements drives the time bound. Each hash map lookup and insert is O(1) average. Space is proportional to the number of elements inserted into the map, which is at most n.",
+    "time": "O(n)",
+    "space": "O(n)"
+  },
+  "code_review": {
+    "strengths": [
+      "Single-pass design avoids the O(n²) brute force without extra complexity",
+      "Early return on find is clean — no need to track a result variable",
+      "Variable name `complement` clearly expresses the intent of `target - nums[i]`"
+    ],
+    "improvements": [
+      {
+        "issue": "`seen` is a generic name that doesn't hint at what's stored",
+        "suggestion": "Rename to `num_to_index` to make the map's purpose self-documenting"
+      },
+      {
+        "issue": "Implicitly returns `None` if no pair is found — it relies entirely on the problem's 'exactly one solution' guarantee",
+        "suggestion": "For use outside that guaranteed-input contract, add an explicit `return []` (or raise) after the loop so the no-match case is unambiguous"
+      }
+    ]
+  },
+  "alternatives": [
+    {
+      "approach": "Brute force — for every pair (i, j) with i < j, check if nums[i] + nums[j] == target.",
+      "reasoning": "Two nested loops each running up to n iterations give n*(n-1)/2 checks, which is O(n²). No extra space beyond the output.",
+      "complexity": "O(n²) time, O(1) space",
+      "tradeoff": "Only worth it when memory is severely constrained and n is small (< ~1000). At LeetCode's n ≤ 10⁴ the hash map approach is always faster.",
+      "code_example": "for i in range(len(nums)):\n    for j in range(i + 1, len(nums)):\n        if nums[i] + nums[j] == target:\n            return [i, j]"
+    },
+    {
+      "approach": "Sort + two pointers — sort a copy of the array with original indices attached, then use left/right pointers converging toward the target sum.",
+      "reasoning": "Sorting is O(n log n). The two-pointer scan is O(n). Overall O(n log n) time. The index-preserving copy costs O(n) space.",
+      "complexity": "O(n log n) time, O(n) space",
+      "tradeoff": "Useful when the array is already sorted (then just O(n) time with the pointers). On an unsorted array it's strictly worse than the hash map. The implementation is also more involved because original indices must be preserved through the sort.",
+      "code_example": "indexed = sorted(enumerate(nums), key=lambda x: x[1])\nl, r = 0, len(indexed) - 1\nwhile l < r:\n    s = indexed[l][1] + indexed[r][1]\n    if s == target:\n        return [indexed[l][0], indexed[r][0]]\n    elif s < target:\n        l += 1\n    else:\n        r -= 1"
+    }
+  ],
+  "pattern": {
+    "explanation": "The problem asks for two elements with a fixed relationship (they sum to a target). Storing previously seen values in a hash map so each new element can check for its required partner in O(1) is the canonical complement-lookup pattern — the same mechanic appears whenever a problem reduces to 'find the other half of a pair'.",
+    "category": "hash map / complement lookup",
+    "similar_problems": [
+      {
+        "problem_type": "Two elements with a fixed difference — same map idea but checking for `num - k` (or `num + k`) instead of `target - num`",
+        "named_example": "K-diff Pairs in an Array"
+      },
+      {
+        "problem_type": "Subarray sum equals k — running prefix sums stored in a map, checking whether `prefix - k` has been seen",
+        "named_example": "Subarray Sum Equals K"
+      },
+      {
+        "problem_type": "Four-number sum decomposable into two pair lookups — hash map stores all pair sums from two arrays, second pair checks for complement",
+        "named_example": "4Sum II"
+      },
+      {
+        "problem_type": "Longest sequence of consecutive integers — set membership check for sequence boundaries",
+        "named_example": "Longest Consecutive Sequence"
+      }
+    ]
+  },
+  "interviewer_followup": "What would you change if the array could contain duplicates and you needed to return all unique pairs that sum to the target, not just one?"
+}
